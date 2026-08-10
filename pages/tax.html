@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>税法复习计划 · 8月29日考试</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .tax-hero {
+      background: linear-gradient(135deg, #fff0f6, #fff8fb);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px 22px; margin-bottom: 16px;
+    }
+    .tax-hero h2 { margin: 0; font-size: 18px; color: var(--pink-2); }
+    .tax-number { font-size: 36px; font-weight: 800; color: var(--pink-2); }
+    .tax-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .tax-card h3 { margin: 0 0 12px; font-size: 16px; color: var(--text); display:flex; align-items:center; gap:8px; }
+    .tax-card ul { margin:0; padding-left:18px; font-size:13px; color:var(--text); line-height:1.8; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { text-align:left; padding:10px 8px; border-bottom:2px solid var(--border); color:var(--text-2); }
+    td { padding:10px 8px; border-bottom:1px dashed var(--border); }
+    .btn-primary {
+      background: linear-gradient(135deg, #ff85c0, #f759ab);
+      color: #fff; padding: 10px 22px; border-radius: 24px;
+      font-weight: 600; border: none; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(247,89,171,0.28);
+    }
+    .btn-primary:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">🎀</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="../index.html?view=dashboard"><div class="icon">🏠</div><span>首页仪表盘</span></a>
+        <a class="nav-item active" href="../index.html?view=study"><div class="icon">📚</div><span>个人学习</span></a>
+        <a class="nav-item" href="../index.html?view=kid"><div class="icon">🧸</div><span>旺仔教育</span></a>
+        <a class="nav-item" href="../index.html?view=health"><div class="icon">💊</div><span>健康管理</span></a>
+        <a class="nav-item" href="../index.html?view=more"><div class="icon">🌟</div><span>其他事项</span></a>
+      </nav>
+      <div class="nav-add">
+        <button class="nav-add-btn" onclick="alert('后续可在这里添加新分类')">+</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="header-left">
+          <div class="avatar">💰</div>
+          <div>
+            <div class="header-title">税法考试 · 8月29日 备考</div>
+            <div class="header-tags">
+              <span class="tag-chip">增值税</span>
+              <span class="tag-chip">企业所得税</span>
+              <span class="tag-chip">个人所得税</span>
+            </div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href="../index.html" class="icon-btn" title="返回工作台">←</a>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="tax-hero">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+            <div>
+              <h2>距税法考试还有</h2>
+              <p style="margin:6px 0 0; color:var(--text-2); font-size:13px;">每天至少 45 分钟，先过教材一遍，再刷历年真题，考前 3 天集中查漏补缺。</p>
+            </div>
+            <div style="text-align:center;">
+              <div class="tax-number" id="taxLeft">19</div>
+              <div style="font-size:12px; color:var(--text-2);">天</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-title"><span>📚</span>三大重点税种</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:14px; margin-bottom:16px;">
+          <div class="tax-card">
+            <h3>💰 增值税</h3>
+            <ul>
+              <li>一般纳税人 vs 小规模纳税人</li>
+              <li>税率结构（13% / 9% / 6%）</li>
+              <li>进项税额抵扣规则</li>
+              <li>纳税义务发生时间</li>
+              <li>发票管理与虚开风险</li>
+            </ul>
+          </div>
+          <div class="tax-card">
+            <h3>🏢 企业所得税</h3>
+            <ul>
+              <li>纳税人、征税对象</li>
+              <li>收入确认原则</li>
+              <li>扣除项目与限额</li>
+              <li>亏损弥补（5 年）</li>
+              <li>税收优惠与小型微利</li>
+            </ul>
+          </div>
+          <div class="tax-card">
+            <h3>👤 个人所得税</h3>
+            <ul>
+              <li>居民/非居民纳税人判定</li>
+              <li>综合所得与预扣预缴</li>
+              <li>七级累进税率速算扣除</li>
+              <li>专项附加扣除</li>
+              <li>年度汇算清缴</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="page-card">
+          <div class="page-title"><span>🗓️</span>19 天冲刺表</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px;">时间</th>
+                <th>任务</th>
+                <th style="width:80px; text-align:center;">状态</th>
+              </tr>
+            </thead>
+            <tbody id="taxPlanBody"></tbody>
+          </table>
+        </div>
+
+        <div class="page-card">
+          <div class="page-title"><span>🤖</span>用 AI 帮你梳理税法</div>
+          <p style="font-size:13px; color:var(--text-2); margin-bottom:10px;">把下面指令复制到 AI 助理，让它直接帮你整理一份 19 天的细颗粒度学习表：</p>
+          <textarea id="tax-ai-prompt" readonly style="width:100%; height:160px; padding:10px; border:1px solid var(--border); border-radius:10px; font-size:12px; font-family:inherit; background:var(--surface-2);"></textarea>
+          <button class="btn-primary" onclick="copyTaxPrompt()" style="margin-top:10px;">📋 复制指令</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../data/app.js"></script>
+  <script src="../assets/sync.js"></script>
+  <script>
+    function calcDays(dateStr) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const target = new Date(dateStr); target.setHours(0,0,0,0);
+      return Math.ceil((target - today)/(1000*60*60*24));
+    }
+    document.getElementById("taxLeft").textContent = calcDays("2026-08-29");
+
+    const plans = [
+      { d: "8/10", title: "增值税：纳税人、税率结构梳理" },
+      { d: "8/11", title: "增值税：进项抵扣、纳税义务时间" },
+      { d: "8/12", title: "增值税：发票管理、虚开风险" },
+      { d: "8/13", title: "增值税：章节练习题 50 道" },
+      { d: "8/14", title: "企业所得税：纳税人、征税对象、税率" },
+      { d: "8/15", title: "企业所得税：收入确认、扣除项目" },
+      { d: "8/16", title: "企业所得税：亏损弥补 + 章节练习 50 道" },
+      { d: "8/17", title: "个税：居民判定、综合所得" },
+      { d: "8/18", title: "个税：七级累进、专项附加扣除" },
+      { d: "8/19", title: "个税：年度汇算清缴 + 章节练习 50 道" },
+      { d: "8/20", title: "三税种综合测试卷 1（150 题）" },
+      { d: "8/21", title: "错题回顾 + 薄弱章节二刷" },
+      { d: "8/22", title: "（同时是招标竞赛日）轻量复盘" },
+      { d: "8/23", title: "三税种综合测试卷 2" },
+      { d: "8/24", title: "考前冲刺：常考政策热点" },
+      { d: "8/25", title: "考前冲刺：易混概念对比表" },
+      { d: "8/26", title: "考前冲刺：模拟考 + 错题回顾" },
+      { d: "8/27", title: "考前冲刺：法规重点随手翻" },
+      { d: "8/28", title: "考前一天：心态调整 + 公式回顾" },
+      { d: "8/29", title: "🎯 考试日" }
+    ];
+    const body = document.getElementById("taxPlanBody");
+    const todayStr = `${(new Date().getMonth()+1)}/${new Date().getDate()}`;
+    body.innerHTML = plans.map((p, i) => {
+      const past = new Date(`2026-${p.d.replace("/", "-")}`) < new Date();
+      const today = p.d === todayStr;
+      const isExam = i === plans.length - 1;
+      const status = past ? "✅" : (today ? "📍 今日" : "⏳");
+      const color = past ? "#389e0d" : (today ? "#d48806" : "var(--text-3)");
+      return `<tr style="${isExam?'background:#fffbe6;':''}">
+        <td style="font-weight:700; color:var(--pink-2);">${p.d}</td>
+        <td>${p.title}</td>
+        <td style="text-align:center; color:${color}; font-weight:700;">${status}</td>
+      </tr>`;
+    }).join("");
+
+    const promptText = `我要在 2026 年 8 月 29 日参加税法考试，请按以下要求帮我做备考规划：
+1. 三大主体税种：增值税、企业所得税、个人所得税
+2. 当前基础：能看懂教材但缺乏完整练习
+3. 时间：从今天 8/10 开始，每天 45 分钟（晚上）
+4. 节奏建议：第 1 周通读教材+做题；第 2 周综合测试；第 3 周考前冲刺
+
+请帮我输出：
+A. 每周章节进度建议表（按章节）
+B. 错题本模板（含标签：错因 / 知识点 / 二次复习建议）
+C. 考前 3 天的核心知识速记清单
+D. 答题策略：选择题排除法、不定项判断、案例分析题思路`;
+    document.getElementById("tax-ai-prompt").value = promptText;
+
+    function copyTaxPrompt() {
+      const t = document.getElementById("tax-ai-prompt");
+      t.select();
+      try { document.execCommand("copy"); alert("已复制"); } catch(e) { alert("复制失败，请手动选择"); }
+    }
+  </script>
+</body>
+</html>
