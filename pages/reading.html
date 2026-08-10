@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>每日阅读 · 二上推荐书目</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .book {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      transition: all .15s; cursor: pointer;
+    }
+    .book:hover { border-color: var(--pink); box-shadow: var(--shadow); }
+    .book.done { background: #fff8fb; opacity: 0.7; }
+    .book.done .title { text-decoration: line-through; color: var(--text-3); }
+    .cover {
+      width: 48px; height: 62px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #f9a8d4, #fcd34d);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 20px; color: white; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .cover.b1 { background: linear-gradient(135deg, #85caff, #4b8bfa); }
+    .cover.b2 { background: linear-gradient(135deg, #ffadd2, #eb2f96); }
+    .cover.b3 { background: linear-gradient(135deg, #ffe58f, #fa8c16); }
+    .cover.b4 { background: linear-gradient(135deg, #b7eb8f, #52c41a); }
+    .body { flex: 1; }
+    .title { font-weight: 700; font-size: 14px; }
+    .author { color: var(--text-2); font-size: 12px; }
+    .progress-box {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .progress-box input[type="checkbox"] {
+      width: 22px; height: 22px; accent-color: var(--pink-2); cursor: pointer;
+    }
+    .group-label {
+      display:inline-block; padding:4px 14px; border-radius:999px;
+      background: linear-gradient(90deg,#fff0f6,#fce4f0);
+      color:#c41d7f; font-size:12px; font-weight:600;
+    }
+    .progress-bar { height: 8px; border-radius: 4px; background: #f8c3dc; overflow: hidden; }
+    .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #ff85c0, #f759ab); width: 0%; transition: width .3s; }
+    .stat-number { font-size: 26px; font-weight: 700; }
+    .stat-label { font-size: 12px; color: var(--text-2); }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">🎀</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="../index.html?view=dashboard"><div class="icon">🏠</div><span>首页仪表盘</span></a>
+        <a class="nav-item" href="../index.html?view=study"><div class="icon">📚</div><span>个人学习</span></a>
+        <a class="nav-item active" href="../index.html?view=kid"><div class="icon">🧸</div><span>旺仔教育</span></a>
+        <a class="nav-item" href="../index.html?view=health"><div class="icon">💊</div><span>健康管理</span></a>
+        <a class="nav-item" href="../index.html?view=more"><div class="icon">🌟</div><span>其他事项</span></a>
+      </nav>
+      <div class="nav-add">
+        <button class="nav-add-btn" onclick="alert('后续可在这里添加新分类')">+</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="header-left">
+          <div class="avatar">📚</div>
+          <div>
+            <div class="header-title">每日阅读 · 二上推荐书目</div>
+            <div class="header-tags">
+              <span class="tag-chip">快乐读书吧</span>
+              <span class="tag-chip">课内作家</span>
+              <span class="tag-chip">拓展阅读</span>
+            </div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href="../index.html" class="icon-btn" title="返回工作台">←</a>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-card">
+          <div class="page-title"><span>📈</span>阅读进度</div>
+          <div style="display:flex; gap:24px; flex-wrap:wrap;">
+            <div>
+              <div class="stat-label">本周已完成</div>
+              <div class="stat-number" style="color:#389e0d;"><span id="weekDone">0</span> 本</div>
+            </div>
+            <div>
+              <div class="stat-label">累计完成</div>
+              <div class="stat-number" style="color:var(--pink-2);"><span id="totalDone">0</span> 本</div>
+            </div>
+            <div>
+              <div class="stat-label">总数</div>
+              <div class="stat-number" style="color:#d48806;"><span id="totalBooks">19</span> 本</div>
+            </div>
+          </div>
+          <div class="progress-bar" style="margin-top:12px;">
+            <div class="fill" id="readingBar" style="width:0%;"></div>
+          </div>
+          <p style="font-size:12px; color:var(--text-2); margin: 10px 0 0;">
+            💡 建议：3个分组每天轮换读一本，每天 30 分钟亲子共读。
+          </p>
+        </div>
+
+        <div id="all-books"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../data/app.js"></script>
+  <script src="../assets/sync.js"></script>
+  <script src="../assets/app.js"></script>
+  <script>
+    const state = window.STATE.load();
+    const progress = state.readingProgress || {};
+    const groups = window.APP.readingList;
+
+    const coverKeys = ["b1","b2","b3","b4"];
+    let allBooks = [];
+    let html = "";
+    groups.forEach(g => {
+      html += `<div class="page-card">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+          <span class="group-label">${g.group}</span>
+          <span style="color:var(--text-2); font-size:12px;">共 ${g.books.length} 本</span>
+        </div>
+        <div>`;
+      g.books.forEach((b, j) => {
+        const idx = allBooks.length;
+        allBooks.push(b);
+        const isDone = !!progress["b"+idx];
+        const cover = coverKeys[j % coverKeys.length];
+        const emoji = ["📕","📗","📘","📙"][j % 4];
+        html += `
+          <label class="book ${isDone ? 'done':''}">
+            <span class="cover ${cover}">${emoji}</span>
+            <div class="body">
+              <div class="title">《${b.title}》</div>
+              <div class="author">${b.author || "编著"}</div>
+            </div>
+            <div class="progress-box">
+              <span class="meta" id="meta-${idx}" style="font-size:11px; color:var(--text-3);">${isDone ? "✅ 已读": "未读"}</span>
+              <input type="checkbox" data-idx="${idx}" ${isDone?"checked":""} />
+            </div>
+          </label>
+        `;
+      });
+      html += `</div></div>`;
+    });
+    document.getElementById("all-books").innerHTML = html;
+
+    document.querySelectorAll("input[type=checkbox]").forEach(el => {
+      el.addEventListener("change", e => {
+        const idx = e.target.dataset.idx;
+        const s = window.STATE.load();
+        if (!s.readingProgress) s.readingProgress = {};
+        s.readingProgress["b"+idx] = e.target.checked;
+        window.STATE.save(s);
+        e.target.parentElement.parentElement.classList.toggle("done", e.target.checked);
+        document.getElementById("meta-" + idx).textContent = e.target.checked ? "✅ 已读" : "未读";
+        updateTotals();
+        if (e.target.checked) {
+          const ss = window.STATE.load();
+          window.STATE.setTodayItem("reading", true, ss);
+        }
+      });
+    });
+
+    function updateTotals() {
+      const s = window.STATE.load();
+      let total = 0;
+      Object.values(s.readingProgress || {}).forEach(v => v && total++);
+      const totalBooksCount = allBooks.length;
+      document.getElementById("totalDone").textContent = total;
+      document.getElementById("totalBooks").textContent = totalBooksCount;
+      document.getElementById("readingBar").style.width = (total / totalBooksCount * 100).toFixed(1) + "%";
+      const weekDone = Math.min(7, total);
+      document.getElementById("weekDone").textContent = weekDone;
+    }
+    updateTotals();
+  </script>
+</body>
+</html>
