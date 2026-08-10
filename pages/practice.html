@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>招标每日120题 · 模拟考场</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .exam-bar {
+      background: linear-gradient(135deg, #ff85c0, #f759ab);
+      color: white;
+      padding: 12px 22px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; flex-wrap: wrap;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+    .timer {
+      font-family: ui-monospace, "SF Mono", Consolas, monospace;
+      font-size: 24px; font-weight: 700;
+      background: rgba(0,0,0,0.2);
+      padding: 6px 14px; border-radius: 10px;
+    }
+    .timer.warning { color: #fff566; animation: pulse 1.5s infinite; }
+    .timer.danger { color: #ffccc7; animation: pulse 0.8s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+    .qtype-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .qtype-tab {
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .qtype-tab:hover { background: var(--surface-2); }
+    .qtype-tab.active {
+      background: linear-gradient(135deg, #ff85c0, #f759ab);
+      color: white; border-color: transparent;
+      box-shadow: 0 3px 10px rgba(247,89,171,0.22);
+    }
+
+    .navi {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+      gap: 4px;
+      margin-top: 12px;
+    }
+    .navi .np {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: white;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 12px;
+    }
+    .navi .np.answered { background: #fff0f6; border-color: #ffadd2; color: #c41d7f; }
+    .navi .np.current { background: linear-gradient(135deg, #ff85c0, #f759ab); color: white; border-color: transparent; }
+    .navi .np.wrong { background: #fff1f0; color: #cf1322; }
+
+    .col-exam {
+      display: grid; grid-template-columns: 1fr 320px; gap: 14px;
+      margin-top: 16px;
+    }
+    @media (max-width: 980px) {
+      .col-exam { grid-template-columns: 1fr; }
+    }
+
+    .progress-bar { height: 6px; border-radius: 3px; background: #f8c3dc; overflow: hidden; }
+    .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #ff85c0, #f759ab); width: 0%; transition: width .3s; }
+    .btn-success {
+      background: linear-gradient(135deg, #95de64, #73d13d);
+      color: #fff; padding: 10px 18px; border-radius: 24px; font-weight: 600;
+      box-shadow: 0 4px 12px rgba(149,222,100,0.28);
+      border: none; cursor: pointer;
+    }
+    .btn-secondary {
+      background: #fff; border: 1px solid var(--border); color: var(--text);
+      padding: 10px 18px; border-radius: 24px; cursor: pointer;
+    }
+    .list-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 16px; margin-bottom: 12px;
+    }
+    .list-card h3 { margin: 0 0 10px; font-size: 15px; color: var(--text); }
+    details {
+      background: var(--surface-2);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 12px 16px;
+    }
+    summary { cursor: pointer; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- 左侧导航 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">🎀</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="../index.html?view=dashboard">
+          <div class="icon">🏠</div><span>首页仪表盘</span>
+        </a>
+        <a class="nav-item active" href="../index.html?view=study">
+          <div class="icon">📚</div><span>个人学习</span>
+        </a>
+        <a class="nav-item" href="../index.html?view=kid">
+          <div class="icon">🧸</div><span>旺仔教育</span>
+        </a>
+        <a class="nav-item" href="../index.html?view=health">
+          <div class="icon">💊</div><span>健康管理</span>
+        </a>
+        <a class="nav-item" href="../index.html?view=more">
+          <div class="icon">🌟</div><span>其他事项</span>
+        </a>
+      </nav>
+      <div class="nav-add">
+        <button class="nav-add-btn" onclick="alert('后续可在这里添加新分类')">+</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="header-left">
+          <div class="avatar">🎯</div>
+          <div>
+            <div class="header-title">招标每日120题 · 模拟考场</div>
+            <div class="header-tags">
+              <span class="tag-chip">8月22日考试</span>
+              <span class="tag-chip">单选70·判断20·多选30</span>
+              <span class="tag-chip">满分150</span>
+            </div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div class="timer" id="timer">60:00</div>
+          <a href="../index.html" class="icon-btn" title="返回工作台">←</a>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="exam-bar">
+          <a href="../index.html" style="color:white; text-decoration:none; font-weight:600;">← 返回工作台</a>
+          <div style="text-align:center; flex:1;">
+            <strong>🎯 招标每日 120 题 · 模拟考场</strong>
+            <span style="margin-left:8px; opacity:0.9;" id="q-count">共 120 题</span>
+          </div>
+          <span style="opacity:0.9;">60 分钟限时</span>
+        </div>
+
+        <div style="margin: 18px 0;">
+          <div class="qtype-tabs">
+            <a class="qtype-tab active" href="?mode=all#idx=0">全部 120 题</a>
+            <a class="qtype-tab" href="?mode=single#idx=0">单选 70 题</a>
+            <a class="qtype-tab" href="?mode=judge#idx=0">判断 20 题</a>
+            <a class="qtype-tab" href="?mode=multi#idx=0">多选 30 题</a>
+            <a class="qtype-tab" href="?mode=quick30#idx=0">快速 30 题</a>
+            <a class="qtype-tab" href="?mode=quick60#idx=0">快速 60 题</a>
+            <span style="flex:1;"></span>
+            <a class="qtype-tab" href="#answer-key">📋 答案一览</a>
+            <a class="qtype-tab" href="#topic-plan">📅 12天计划</a>
+            <a class="qtype-tab" href="#ai-prompt">🤖 让AI补题</a>
+          </div>
+        </div>
+
+        <div class="col-exam">
+          <div id="qzone-wrap">
+            <h3 id="qzone-title" style="margin-top:0;">第 1 题</h3>
+            <div style="margin-bottom:10px;">
+              <div class="progress-bar">
+                <div class="fill" id="progress-fill" style="width:0%"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-2); margin-top:4px;">
+                <span id="progress-label">0 / 120 已作答</span>
+                <span>距交卷 <strong style="color:var(--pink-2);" id="time-left-info">60 分钟</strong></span>
+              </div>
+            </div>
+            <div id="qzone"></div>
+          </div>
+
+          <aside>
+            <div class="list-card">
+              <h3>📝 答题卡</h3>
+              <div style="font-size:12px; color:var(--text-2); margin-bottom:6px;">
+                <span style="display:inline-block; width:14px; height:14px; border-radius:3px; background:white; border:1px solid var(--border); vertical-align:middle;"></span> 未答
+                &nbsp;
+                <span style="display:inline-block; width:14px; height:14px; border-radius:3px; background:#fff0f6; border:1px solid #ffadd2; vertical-align:middle;"></span> 已答
+              </div>
+              <div class="navi" id="navi"></div>
+              <div style="margin-top:14px;">
+                <button class="btn-success" onclick="submitExam()" style="width:100%; border:none;">📤 立即交卷</button>
+                <button class="btn-secondary" onclick="initPractice()" style="width:100%; margin-top:6px;">🔄 重新开始</button>
+              </div>
+            </div>
+
+            <div class="list-card">
+              <h3>📅 12 天冲刺计划</h3>
+              <div style="font-size:13px;">
+                <p style="margin: 0 0 6px;"><strong>第 1-3 天：</strong>通读 ima 知识库法规原文 3-5 篇</p>
+                <p style="margin: 0 0 6px;"><strong>第 4-7 天：</strong>按章节练习单选 + 判断题</p>
+                <p style="margin: 0 0 6px;"><strong>第 8-10 天：</strong>主攻多选题（多选最难）</p>
+                <p style="margin: 0 0 6px;"><strong>第 11 天：</strong>综合模拟，60 分钟限时</p>
+                <p style="margin: 0;"><strong>第 12 天（考前）：</strong>错题回顾 + 应急签</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div id="result-zone" style="margin-top:18px;"></div>
+
+        <section id="answer-key" style="margin-top: 36px;">
+          <h2 class="page-title"><span>📋</span>答案一览（点击展开）</h2>
+          <p style="font-size:12px; color:var(--text-2);">答完题再来对照；也可以先背标准答案。</p>
+          <details>
+            <summary>显示全部 120 题答案</summary>
+            <div id="all-answers" style="margin-top:10px;"></div>
+          </details>
+        </section>
+
+        <section id="topic-plan" style="margin-top:24px;">
+          <h2 class="page-title"><span>📚</span>重点章节（基于 ima 知识库）</h2>
+          <div id="topics-list" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:10px;"></div>
+        </section>
+
+        <section id="ai-prompt" style="margin-top:24px;">
+          <h2 class="page-title"><span>🤖</span>让 AI 帮你再出 120 道新题</h2>
+          <p style="color:var(--text-2); font-size:13px;">把下面这段指令复制到任意 AI 助理，按需选择题型即可获得更针对性的题目。</p>
+          <textarea id="ai-prompt-text" readonly style="width:100%; height:180px; padding:10px; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:12px;"></textarea>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button class="btn-primary" onclick="copyAiPrompt()">📋 复制指令</button>
+            <button class="btn-secondary" onclick="regenerateAiPrompt()">🔄 换一个</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../data/questions.js"></script>
+  <script src="../data/app.js"></script>
+  <script src="../assets/sync.js"></script>
+  <script src="../assets/app.js"></script>
+  <script src="../assets/practice.js"></script>
+  <script>
+    initPractice();
+
+    function renderNavi() {
+      const navi = document.getElementById("navi");
+      navi.innerHTML = window.PRACTICE.questions.map((q, i) => {
+        const answered = window.PRACTICE.answers[q.id] != null && window.PRACTICE.answers[q.id] !== "";
+        const hash = new URLSearchParams(location.hash.slice(1)).get("idx");
+        const cur = hash ? parseInt(hash) : 0;
+        const cls = (i === cur ? "current " : "") + (answered ? "answered" : "");
+        return `<button class="np ${cls}" onclick="jumpTo(${i})" title="${q.type} #${q.id}">${i+1}</button>`;
+      }).join("");
+    }
+    setInterval(renderNavi, 500);
+
+    function startTimer() {
+      const totalMs = window.PRACTICE.totalMs;
+      function tick() {
+        if (window.PRACTICE.submitted) return;
+        const elapsed = Date.now() - window.PRACTICE.startTime;
+        const remain = Math.max(0, totalMs - elapsed);
+        const min = Math.floor(remain / 60000);
+        const sec = Math.floor((remain % 60000) / 1000);
+        const el = document.getElementById("timer");
+        el.textContent = `${String(min).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+        if (min < 10) el.classList.add("warning");
+        if (min < 5) el.classList.add("danger");
+        if (remain <= 0) {
+          window.PRACTICE.submitted = true;
+          alert("考试时间到！系统将自动交卷。");
+          submitExam();
+        }
+      }
+      tick();
+      window.PRACTICE.timerId = setInterval(tick, 1000);
+    }
+
+    function loadDefaultAI() {
+      const random = window.APP.tenderTopics[Math.floor(Math.random()*window.APP.tenderTopics.length)];
+      const tpl = `请作为熟悉《招标投标法》及实施条例、发改法规（2022）1117号文、发改法规（2023）27号文的专业顾问，基于「${random}」主题为我出 120 道模拟题，分布如下：
+- 单选题 70 道（每题1分）
+- 判断题 20 道（每题1分）
+- 多选题 30 道（每题2分）
+
+请按"题号｜题型｜题干｜选项｜答案｜简要解析"格式输出，整理为表格，方便直接打印或者拷到本工作台练习。
+另外，本题库基于普通通用题，如果知识库另有补充，请将对应真题考点覆盖进去。`;
+      document.getElementById("ai-prompt-text").value = tpl;
+    }
+    window.loadDefaultAI = loadDefaultAI;
+    window.regenerateAiPrompt = loadDefaultAI;
+
+    function copyAiPrompt() {
+      const text = document.getElementById("ai-prompt-text");
+      text.select();
+      try { document.execCommand("copy"); } catch(e) {}
+      alert("指令已复制，可粘贴到 AI 助理获取定制题目。");
+    }
+    window.copyAiPrompt = copyAiPrompt;
+
+    (function(){
+      const Q = window.QUESTIONS;
+      const all = [
+        ...Q.questions.single.map(q => ({...q, type:"single"})),
+        ...Q.questions.judge.map(q => ({...q, type:"judge"})),
+        ...Q.questions.multi.map(q => ({...q, type:"multi"}))
+      ];
+      const box = document.getElementById("all-answers");
+      box.innerHTML = all.map((q, i) => `
+        <div style="padding:6px 0; border-bottom:1px dashed var(--border); font-size:13px;">
+          <strong style="color:var(--pink-2);">${i+1}.</strong>
+          [${q.type === 'single' ? '单选' : q.type === 'judge' ? '判断' : '多选'}]
+          <span style="color:var(--text-2); margin-left:6px;">${q.q}</span>
+          <span style="margin-left:8px; color:#389e0d; font-weight:700;">→ ${q.answer}</span>
+        </div>
+      `).join("");
+    })();
+
+    (function(){
+      const box = document.getElementById("topics-list");
+      box.innerHTML = window.APP.tenderTopics.map((t, i) => `
+        <div class="list-card" style="padding:14px;">
+          <span style="display:inline-block; padding:2px 8px; border-radius:10px; background:#fff0f6; color:#c41d7f; font-size:11px; margin-bottom:6px;">${i+1}</span>
+          <h3 style="margin-top:6px; font-size:14px;">${t}</h3>
+          <p style="font-size:12px; color:var(--text-2); margin:6px 0 0;">来源：ima 知识库「2026省招投标比赛文件」</p>
+        </div>
+      `).join("");
+    })();
+
+    window.loadDefaultAI();
+    window.addEventListener("hashchange", renderNavi);
+    startTimer();
+  </script>
+</body>
+</html>
