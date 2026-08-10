@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>旺仔学习工作台</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="layout">
+    <!-- 左侧导航 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">🎀</div>
+      <nav class="nav-list" id="nav-list">
+        <div class="nav-item active" data-view="dashboard">
+          <div class="icon">🏠</div>
+          <span>首页仪表盘</span>
+        </div>
+        <div class="nav-item" data-view="study">
+          <div class="icon">📚</div>
+          <span>个人学习</span>
+        </div>
+        <div class="nav-item" data-view="kid">
+          <div class="icon">🧸</div>
+          <span>旺仔教育</span>
+        </div>
+        <div class="nav-item" data-view="health">
+          <div class="icon">💊</div>
+          <span>健康管理</span>
+        </div>
+        <div class="nav-item" data-view="more">
+          <div class="icon">🌟</div>
+          <span>其他事项</span>
+        </div>
+      </nav>
+      <div class="nav-add">
+        <button class="nav-add-btn" title="添加分类" onclick="alert('后续可在这里添加新分类')">+</button>
+      </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
+      <header class="header">
+        <div class="header-left">
+          <div class="avatar" id="user-avatar">🌷</div>
+          <div>
+            <div class="header-title" id="workspace-title" contenteditable="true" spellcheck="false">妈妈的工作台</div>
+            <div class="header-tags">
+              <span class="tag-chip">旺仔</span>
+              <span class="tag-chip">招标竞赛</span>
+              <span class="tag-chip">税法备考</span>
+              <span class="tag-chip">二年级上册</span>
+            </div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" title="今日日期" id="header-date">📅</button>
+          <button class="icon-btn" title="设置" onclick="alert('设置功能待扩展')">⚙️</button>
+          <button class="icon-btn" title="添加" onclick="alert('点学科卡片底部的 + 添加待办')">➕</button>
+        </div>
+      </header>
+
+      <div class="content" id="main-content">
+        <!-- JS 动态渲染 -->
+      </div>
+    </main>
+  </div>
+
+  <!-- 手机扫码访问 -->
+  <div id="qr-fab" style="position:fixed;bottom:24px;right:24px;z-index:9999;cursor:pointer;background:#ff6b9d;color:#fff;border-radius:50%;width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 16px rgba(255,107,157,0.4);transition:transform 0.2s;" onclick="toggleQR()" title="手机扫码访问">
+    📱
+  </div>
+  <div id="qr-popup" style="display:none;position:fixed;bottom:90px;right:24px;z-index:9999;background:#fff;border-radius:16px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,0.15);text-align:center;">
+    <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:12px;">📱 手机扫码访问</div>
+    <div id="qr-img" style="width:200px;height:200px;margin:0 auto;"></div>
+    <div id="phone-url" style="font-size:12px;color:#999;margin-top:8px;word-break:break-all;max-width:220px;"></div>
+    <div style="font-size:11px;color:#bbb;margin-top:6px;">确保手机和电脑在同一 WiFi</div>
+  </div>
+  <script>
+    function toggleQR() {
+      const popup = document.getElementById('qr-popup');
+      if (popup.style.display === 'none') {
+        const url = location.origin;
+        document.getElementById('qr-img').innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(url) + '" width="200" height="200" alt="QR Code" style="border-radius:8px;" />';
+        document.getElementById('phone-url').textContent = url;
+        popup.style.display = 'block';
+      } else {
+        popup.style.display = 'none';
+      }
+    }
+  </script>
+
+  <script src="data/app.js"></script>
+  <script src="data/lessons.js"></script>
+  <script src="data/questions.js"></script>
+  <script src="assets/sync.js"></script>
+  <script>
+    /* === 任务数据 === */
+    const CATEGORIES = [
+      { key: 'dashboard', name: '首页仪表盘', emoji: '🏠' },
+      { key: 'study', name: '个人学习', emoji: '📚' },
+      { key: 'kid', name: '旺仔教育', emoji: '🧸' },
+      { key: 'health', name: '健康管理', emoji: '💊' },
+      { key: 'more', name: '其他事项', emoji: '🌟' }
+    ];
+
+    const SUBJECTS = [
+      {
+        key: 'tender', category: 'study', name: '招标竞赛', emoji: '📚',
+        tasks: [
+          { id: 'tender-daily', title: '今日招标每日120题练习（60分钟模拟考场）', subject: '招标', priority: '高优先', freq: '每天', date: '08-22', link: 'pages/practice.html' }
+        ]
+      },
+      {
+        key: 'tax', category: 'study', name: '财务知识', emoji: '💰',
+        tasks: [
+          { id: 'tax-daily', title: '税法考试复习（增值税/消费税/企业所得税）', subject: '税法', priority: '高优先', freq: '每天', date: '08-29', link: 'pages/tax.html' }
+        ]
+      },
+      {
+        key: 'yuwen', category: 'kid', name: '语文预习', emoji: '📖',
+        tasks: [
+          { id: 'yuwen-preview', title: '二上语文每日预习一课 + 完成晨读内容', subject: '语文', priority: '高优先', freq: '每天', date: '今日', link: 'pages/yuwen.html' },
+          { id: 'yuwen-recite', title: '背诵当日必背内容（古诗/日积月累/课文）', subject: '语文', priority: '高优先', freq: '每天', date: '今日', link: 'pages/yuwen.html' }
+        ]
+      },
+      {
+        key: 'math', category: 'kid', name: '数学口算', emoji: '➗',
+        tasks: [
+          { id: 'math-100', title: '100以内加减法口答1页', subject: '数学', priority: '高优先', freq: '每天', date: '今日' },
+          { id: 'math-multi', title: '乘法口算1页', subject: '数学', priority: '高优先', freq: '每天', date: '今日' }
+        ]
+      },
+      {
+        key: 'writing', category: 'kid', name: '练字', emoji: '🖊️',
+        tasks: [
+          { id: 'write-daily', title: '每日练字30分钟', subject: '练字', priority: '中优先', freq: '每天', date: '今日' }
+        ]
+      },
+      {
+        key: 'reading', category: 'kid', name: '阅读', emoji: '📚',
+        tasks: [
+          { id: 'read-daily', title: '每日阅读（快乐读书吧/课内作家/拓展书目）', subject: '阅读', priority: '高优先', freq: '每天', date: '今日', link: 'pages/reading.html' }
+        ]
+      },
+      {
+        key: 'sport', category: 'kid', name: '运动', emoji: '🏃',
+        tasks: [
+          { id: 'sport-daily', title: '每日运动', subject: '运动', priority: '中优先', freq: '每天', date: '今日' }
+        ]
+      },
+      {
+        key: 'english', category: 'kid', name: '英语', emoji: '🅰️',
+        tasks: [
+          { id: 'en-daily', title: '新概念英语入门A', subject: '英语', priority: '中优先', freq: '每天', date: '今日' }
+        ]
+      },
+      {
+        key: 'health', category: 'health', name: '健康', emoji: '💊',
+        tasks: [
+          { id: 'vd-daily', title: '每日补充维生素D', subject: '健康', priority: '中优先', freq: '每天', date: '今日' }
+        ]
+      },
+      {
+        key: 'more', category: 'more', name: '待扩展', emoji: '🌟',
+        tasks: [
+          { id: 'more-1', title: '其他临时待办（点击底部 + 添加）', subject: '其他', priority: '低优先', freq: '按需', date: '今日' }
+        ]
+      }
+    ];
+
+    const appData = window.APP || {};
+    const exams = appData.exams || [];
+    const kidName = appData.kidName || '旺仔';
+
+    let currentView = 'dashboard';
+    let currentFilter = 'all';
+
+    function daysUntil(dateStr) {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const target = new Date(dateStr);
+      target.setHours(0,0,0,0);
+      const diff = Math.ceil((target - today) / (1000*60*60*24));
+      return diff;
+    }
+
+    function renderHeaderDate() {
+      const now = new Date();
+      document.getElementById('header-date').textContent = `📅 ${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}`;
+    }
+
+    function renderNav() {
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.view === currentView);
+      });
+    }
+
+    function getDoneStatus(id) {
+      try { return localStorage.getItem('todo_' + id) === '1'; } catch(e) { return false; }
+    }
+    function setDoneStatus(id, done) {
+      try { localStorage.setItem('todo_' + id, done ? '1' : '0'); } catch(e) {}
+      // 多设备同步
+      if (window.SYNC) window.SYNC.saveAndSync();
+    }
+
+    function renderDashboardWidgets() {
+      const tender = exams.find(e => e.id === 'tender');
+      const tax = exams.find(e => e.id === 'tax');
+      const tenderDays = tender ? daysUntil(tender.date) : 0;
+      const taxDays = tax ? daysUntil(tax.date) : 0;
+
+      const todayDone = SUBJECTS.flatMap(s => s.tasks).filter(t => getDoneStatus(t.id)).length;
+      const totalToday = SUBJECTS.flatMap(s => s.tasks).length;
+
+      return `
+        <div class="widgets">
+          <div class="widget">
+            <div class="widget-number">${tenderDays}</div>
+            <div class="widget-label">距离招标竞赛（8.22）</div>
+          </div>
+          <div class="widget">
+            <div class="widget-number">${taxDays}</div>
+            <div class="widget-label">距离税法考试（8.29）</div>
+          </div>
+          <div class="widget">
+            <div class="widget-number">${todayDone}/${totalToday}</div>
+            <div class="widget-label">今日已完成打卡</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFilterTabs() {
+      const tabs = [
+        { key: 'all', label: '全部' },
+        { key: 'high', label: '#高优先' },
+        { key: 'daily', label: '#每天' },
+        { key: 'kid', label: '#旺仔' },
+        { key: 'study', label: '#个人学习' }
+      ];
+      return `
+        <div class="filter-tabs">
+          ${tabs.map(t => `
+            <button class="filter-tab ${currentFilter === t.key ? 'active' : ''}" data-filter="${t.key}">${t.label}</button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderTaskTags(task) {
+      return `
+        <span class="task-tag subject">🌸 ${task.subject}</span>
+        <span class="task-tag priority ${task.priority === '中优先' ? 'mid' : ''}">${task.priority}</span>
+        <span class="task-tag freq">🔄 ${task.freq}</span>
+        <span class="task-tag date">📅 ${task.date}</span>
+      `;
+    }
+
+    function renderSubjectCard(subject) {
+      const visibleTasks = subject.tasks.filter(t => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'high') return t.priority === '高优先';
+        if (currentFilter === 'daily') return t.freq === '每天';
+        if (currentFilter === 'kid') return subject.category === 'kid';
+        if (currentFilter === 'study') return subject.category === 'study';
+        return true;
+      });
+      if (!visibleTasks.length) return '';
+
+      const doneCount = visibleTasks.filter(t => getDoneStatus(t.id)).length;
+
+      return `
+        <div class="subject-card" data-category="${subject.category}">
+          <div class="subject-header">
+            <div class="subject-name"><span class="emoji">${subject.emoji}</span>${subject.name}</div>
+            <div class="subject-count">${doneCount}/${visibleTasks.length} 已完成</div>
+          </div>
+          <div class="task-list">
+            ${visibleTasks.map(t => `
+              <div class="task-item ${getDoneStatus(t.id) ? 'done' : ''}" data-id="${t.id}">
+                <div class="task-check"></div>
+                <div class="task-body">
+                  <div class="task-title">${t.title}</div>
+                  <div class="task-meta">
+                    <div class="task-tags">${renderTaskTags(t)}</div>
+                    ${t.link ? `<a class="task-action" href="${t.link}">去打卡 →</a>` : ''}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <button class="add-task" onclick="alert('后续可添加“${subject.name}”子任务')">+ 添加「${subject.name}」待办</button>
+        </div>
+      `;
+    }
+
+    function renderContent() {
+      const container = document.getElementById('main-content');
+      let subjectsToShow = SUBJECTS;
+
+      if (currentView === 'dashboard') {
+        // dashboard 显示全部
+      } else if (currentView === 'study') {
+        subjectsToShow = SUBJECTS.filter(s => s.category === 'study');
+      } else if (currentView === 'kid') {
+        subjectsToShow = SUBJECTS.filter(s => s.category === 'kid');
+      } else if (currentView === 'health') {
+        subjectsToShow = SUBJECTS.filter(s => s.category === 'health');
+      } else if (currentView === 'more') {
+        subjectsToShow = SUBJECTS.filter(s => s.category === 'more');
+      }
+
+      const categoryName = CATEGORIES.find(c => c.key === currentView)?.name || '首页仪表盘';
+
+      container.innerHTML = `
+        ${currentView === 'dashboard' ? `
+          <div class="import-banner" onclick="alert('可在此导入暑假计划表，后续扩展')">
+            📥 一键导入暑假计划表（按星期几精确打卡，覆盖所有科目与任务）
+          </div>
+          ${renderDashboardWidgets()}
+        ` : `
+          <div class="import-banner" onclick="alert('可在此导入${categoryName}计划表')">
+            📥 一键导入「${categoryName}」计划表
+          </div>
+        `}
+
+        <div class="section-header">
+          <div class="section-title">
+            <span>📚</span>
+            学科任务
+            <span class="section-sub">按学科分类 · 可设优先级、重复周期、标签</span>
+          </div>
+          ${renderFilterTabs()}
+        </div>
+
+        ${subjectsToShow.map(renderSubjectCard).join('')}
+      `;
+
+      bindTaskEvents();
+      bindFilterEvents();
+    }
+
+    function bindTaskEvents() {
+      document.querySelectorAll('.task-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          if (e.target.closest('a')) return;
+          const id = item.dataset.id;
+          const done = !item.classList.contains('done');
+          setDoneStatus(id, done);
+          item.classList.toggle('done', done);
+          // 重新渲染以更新计数
+          renderContent();
+        });
+      });
+    }
+
+    function bindFilterEvents() {
+      document.querySelectorAll('.filter-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentFilter = btn.dataset.filter;
+          renderContent();
+        });
+      });
+    }
+
+    function init() {
+      renderHeaderDate();
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.addEventListener('click', () => {
+          currentView = el.dataset.view;
+          currentFilter = 'all';
+          renderNav();
+          renderContent();
+        });
+      });
+      renderNav();
+      renderContent();
+
+      // 标题编辑保存
+      const titleEl = document.getElementById('workspace-title');
+      try {
+        const saved = localStorage.getItem('workspace_title');
+        if (saved) titleEl.textContent = saved;
+      } catch(e) {}
+      titleEl.addEventListener('blur', () => {
+        try { localStorage.setItem('workspace_title', titleEl.textContent); } catch(e) {}
+        if (window.SYNC) window.SYNC.saveAndSync();
+      });
+
+      // 初始化多设备同步
+      if (window.SYNC) {
+        window.SYNC.init().then(() => {
+          // 同步完成后重新渲染
+          renderContent();
+          const saved = localStorage.getItem('workspace_title');
+          if (saved) titleEl.textContent = saved;
+        });
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
