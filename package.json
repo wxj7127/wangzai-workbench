@@ -1,0 +1,17 @@
+{
+  "name": "wangzai-workbench",
+  "version": "1.0.0",
+  "description": "旺仔学习工作台 - 多设备同步版",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.2",
+    "pg": "^8.23.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
