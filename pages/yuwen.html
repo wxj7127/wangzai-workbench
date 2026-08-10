@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>今日语文预习 · 二年级上册</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    .lesson-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 20px 22px;
+      margin-bottom: 14px;
+    }
+    .lesson-card.today {
+      border-color: var(--pink);
+      background: linear-gradient(135deg, #fff8fb, #fff0f6);
+    }
+    .lesson-card h3 { margin: 0; font-size: 18px; color: var(--pink-2); }
+    .lesson-pinyin {
+      font-family: ui-monospace, "SF Mono", Consolas, monospace;
+      background: #fff0f6;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: #c41d7f;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      margin-top: 10px;
+    }
+    .lesson-words {
+      margin-top: 8px;
+      padding: 12px 14px;
+      background: var(--surface-2);
+      border-radius: 10px;
+      font-size: 13px;
+    }
+    .lesson-words span {
+      display: inline-block;
+      padding: 4px 10px;
+      margin: 2px 4px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+    .day-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin: 12px 0 18px;
+    }
+    .day-tab {
+      padding: 6px 14px; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: white; cursor: pointer; font-size: 13px;
+      color: var(--text);
+    }
+    .day-tab.active {
+      background: linear-gradient(135deg, #ff85c0, #f759ab);
+      color: white; border-color: transparent;
+      box-shadow: 0 3px 10px rgba(247,89,171,0.22);
+    }
+    .tag { display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; margin-right:4px; }
+    .tag.primary { background:#fff0f6; color:#c41d7f; }
+    .tag.warn { background:#fff7e6; color:#d48806; }
+    .tag.success { background:#f6ffed; color:#389e0d; }
+    .btn-kid {
+      background: linear-gradient(135deg, #ffd666, #ff9c6e);
+      color: #fff; padding: 9px 18px; border-radius: 24px;
+      font-weight: 600; text-decoration: none; display:inline-block;
+      box-shadow: 0 3px 10px rgba(255,156,110,0.25);
+    }
+    .btn-success {
+      background: linear-gradient(135deg, #95de64, #73d13d);
+      color: #fff; padding: 9px 18px; border-radius: 24px;
+      border: none; font-weight: 600; cursor: pointer;
+      box-shadow: 0 3px 10px rgba(149,222,100,0.25);
+    }
+    .progress-bar { height: 8px; border-radius: 4px; background: #f8c3dc; overflow: hidden; }
+    .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #ff85c0, #f759ab); width: 0%; transition: width .3s; }
+    .recite-card {
+      padding: 14px 16px; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #fff8fb, #fff0f6);
+      margin-bottom: 8px;
+      border-left: 4px solid var(--pink);
+    }
+    .recite-card .rtitle { font-weight: 700; color: #9e1068; }
+    .recite-card .rcontent { font-size: 14px; color: #4a2545; margin-top: 6px; line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">🎀</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="../index.html?view=dashboard"><div class="icon">🏠</div><span>首页仪表盘</span></a>
+        <a class="nav-item" href="../index.html?view=study"><div class="icon">📚</div><span>个人学习</span></a>
+        <a class="nav-item active" href="../index.html?view=kid"><div class="icon">🧸</div><span>旺仔教育</span></a>
+        <a class="nav-item" href="../index.html?view=health"><div class="icon">💊</div><span>健康管理</span></a>
+        <a class="nav-item" href="../index.html?view=more"><div class="icon">🌟</div><span>其他事项</span></a>
+      </nav>
+      <div class="nav-add">
+        <button class="nav-add-btn" onclick="alert('后续可在这里添加新分类')">+</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="header-left">
+          <div class="avatar">📖</div>
+          <div>
+            <div class="header-title">今日语文预习 · 人教版二上</div>
+            <div class="header-tags">
+              <span class="tag-chip">35课知识点</span>
+              <span class="tag-chip">每日晨读</span>
+              <span class="tag-chip">必背古诗</span>
+            </div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href="../index.html" class="icon-btn" title="返回工作台">←</a>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-card">
+          <div class="page-title"><span>📅</span>整体进度</div>
+          <div style="display:flex; gap:18px; font-size:13px; flex-wrap:wrap;">
+            <div>
+              <div style="color:var(--text-2);">今日课次</div>
+              <div style="font-size:28px; font-weight:700; color:var(--pink-2);" id="todayNo">第1课</div>
+            </div>
+            <div>
+              <div style="color:var(--text-2);">剩余天数</div>
+              <div style="font-size:28px; font-weight:700; color:var(--purple);" id="leftDays">35 天</div>
+            </div>
+            <div>
+              <div style="color:var(--text-2);">本页进度</div>
+              <div style="font-size:28px; font-weight:700; color:#389e0d;"><span id="doneCount">0</span> / 35</div>
+            </div>
+          </div>
+          <div class="progress-bar" style="margin-top:12px;">
+            <div class="fill" id="yw-progress" style="width:0%;"></div>
+          </div>
+        </div>
+
+        <div class="page-card">
+          <div class="page-title"><span>📚</span>35 课大目录（点击查看任意一天）</div>
+          <div class="day-tabs" id="dayTabs"></div>
+        </div>
+
+        <section id="currentLesson"></section>
+
+        <div class="page-card">
+          <div class="page-title"><span>📜</span>必背内容（每日滚动抽背）</div>
+          <div id="reciteBox"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../data/lessons.js"></script>
+  <script src="../data/app.js"></script>
+  <script src="../assets/sync.js"></script>
+  <script src="../assets/app.js"></script>
+  <script>
+    const today = window.todayLessonNo ? window.todayLessonNo() : 1;
+    const all = window.LESSONS;
+    document.getElementById("todayNo").textContent = `第 ${today} 课`;
+    document.getElementById("leftDays").textContent = Math.max(0, all.length - today) + " 天";
+
+    const tabs = document.getElementById("dayTabs");
+    all.forEach((l, i) => {
+      const btn = document.createElement("a");
+      btn.className = "day-tab" + (i === today - 1 ? " active" : "");
+      btn.textContent = `第 ${i+1} 课 · ${l.title}`;
+      btn.href = "#lesson-" + (i+1);
+      btn.onclick = (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        showLesson(i);
+      };
+      tabs.appendChild(btn);
+    });
+
+    function showLesson(idx) {
+      const l = all[idx];
+      if (!l) return;
+      const dict = l.dictation && l.dictation[0];
+      const box = document.getElementById("currentLesson");
+      const isToday = (idx + 1) === today;
+      box.innerHTML = `
+        <div class="lesson-card ${isToday ? 'today':''}">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span class="tag ${isToday ? 'warn':'primary'}">第 ${idx+1} 课 · ${l.type}</span>
+            ${isToday ? '<span class="tag success">今日预习</span>' : ''}
+            <span style="color:var(--text-2); font-size:12px;">PDF 第 ${l.page || '?'} 页 · 第 ${idx+1}/${all.length} 课</span>
+          </div>
+          <h3 style="margin-top:10px;">${l.title}</h3>
+          ${dict ? `
+            <div class="lesson-pinyin">${dict.pinyin}</div>
+            <div class="lesson-words">
+              <strong>词语听写：</strong>
+              ${dict.words.split(/\s+/).filter(Boolean).map(w => `<span>${w}</span>`).join("")}
+            </div>
+          ` : ""}
+          ${l.theme ? `
+            <div style="margin-top:10px; padding:10px 14px; background:#f6ffed; border-left:3px solid #73d13d; border-radius:6px; font-size:13px;">
+              <strong style="color:#389e0d;">课文主题：</strong>${l.theme}
+            </div>
+          ` : ""}
+          <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+            <a class="btn-kid" href="../index.html">📝 回去打卡「语文预习」</a>
+            ${isToday ? `<button class="btn-success" onclick="markDone(${idx+1})">✅ 完成今日预习</button>` : ""}
+          </div>
+        </div>
+      `;
+    }
+    window.showLesson = showLesson;
+
+    function markDone(no) {
+      const state = window.STATE.load();
+      window.STATE.setTodayItem("yw-preview", true, state);
+      window.STATE.setTodayItem("yw-recite", true, state);
+      alert("已打卡「语文预习」！");
+      location.href = "../index.html";
+    }
+    window.markDone = markDone;
+
+    (function(){
+      const box = document.getElementById("reciteBox");
+      box.innerHTML = window.APP.reciteEssentials.map((r, i) => `
+        <div class="recite-card">
+          <div class="rtitle">${i+1}. ${r.title}</div>
+          <div class="rcontent">${r.content}</div>
+        </div>
+      `).join("");
+    })();
+
+    showLesson(Math.max(0, Math.min(all.length - 1, today - 1)));
+    let done = 0;
+    const state = window.STATE.load();
+    if (state.checkIns[window.STATE.todayISO()] && state.checkIns[window.STATE.todayISO()]["yw-preview"]) done = 1;
+    document.getElementById("doneCount").textContent = done;
+    document.getElementById("yw-progress").style.width = (done / all.length * 100).toFixed(1) + "%";
+  </script>
+</body>
+</html>
