@@ -1,0 +1,19 @@
+# 依赖
+node_modules/
+package-lock.json
+
+# Python 临时文件
+__pycache__/
+*.pyc
+pdf_content.json
+extract_pdf.py
+extract_lessons.py
+extract_questions.py
+
+# 工作目录
+.workbuddy/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.log
